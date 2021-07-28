@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Animated, Easing, Dimensions } from 'react-native';
 
 import DealList from './DealList';
 import DealListItemDetail from './DealListItemDetail';
@@ -33,6 +33,22 @@ export const App = () => {
 
     const dealsToDisplay = dealsFromSearch.length > 0 ? dealsFromSearch : deals;
 
+    const titleXPosition = new Animated.Value(0);
+    const animateTitle = (direction = 1) => {
+        const width = Dimensions.get('window').width - 150;
+
+        Animated.timing(titleXPosition, {
+            toValue: (direction * width) / 2,
+            useNativeDriver: false,
+            duration: 1000,
+            easing: Easing.ease,
+        }).start(({ finished }) => {
+            if (finished) {
+                animateTitle(-1 * direction);
+            }
+        });
+    };
+
     const setCurrentDeal = (dealId) => {
         setCurrentDealId(dealId);
     };
@@ -47,6 +63,8 @@ export const App = () => {
 
     useEffect(async () => {
         const ac = new AbortController();
+
+        animateTitle();
 
         await fetch('https://bakesaleforgood.com/api/deals')
             .then((res) => res.json())
@@ -83,9 +101,9 @@ export const App = () => {
         );
     } else if (!isLoaded) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.header}>Loading...</Text>
-            </View>
+            <Animated.View style={[{ left: titleXPosition }, styles.container]}>
+                <Text style={styles.header}>Bakesale</Text>
+            </Animated.View>
         );
     }
 
