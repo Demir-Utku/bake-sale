@@ -1,6 +1,14 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Animated, Easing, Dimensions } from 'react-native';
+import {
+    View,
+    Text,
+    StyleSheet,
+    TextInput,
+    Animated,
+    Easing,
+    Dimensions,
+} from 'react-native';
 
 import DealList from './DealList';
 import DealListItemDetail from './DealListItemDetail';
@@ -79,7 +87,9 @@ export const App = () => {
                 }
             );
 
-        await fetch('https://bakesaleforgood.com/api/deals?searchTerm=' + searchTerm)
+        await fetch(
+            'https://bakesaleforgood.com/api/deals?searchTerm=' + searchTerm
+        )
             .then((res) => res.json())
             .then(
                 (result) => {
@@ -110,7 +120,10 @@ export const App = () => {
     if (currentDealId) {
         return (
             <View style={styles.main}>
-                <DealListItemDetail initialDealData={currentDeal()} onBack={unsetCurrentDeal} />
+                <DealListItemDetail
+                    initialDealData={currentDeal()}
+                    onBack={unsetCurrentDeal}
+                />
             </View>
         );
     }

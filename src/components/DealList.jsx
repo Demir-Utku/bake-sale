@@ -14,7 +14,12 @@ const styles = StyleSheet.create({
 const DealList = ({ deals, onItemPress }) => {
     return (
         <View style={styles.list}>
-            <FlatList data={deals} renderItem={({ item }) => <DealListItem deal={item} onPress={onItemPress} />} />
+            <FlatList
+                data={deals}
+                renderItem={({ item }) => (
+                    <DealListItem deal={item} onPress={onItemPress} />
+                )}
+            />
         </View>
     );
 };

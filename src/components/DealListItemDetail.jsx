@@ -1,6 +1,15 @@
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    TouchableOpacity,
+    PanResponder,
+    Animated,
+    Dimensions,
+} from 'react-native';
 import PropTypes from 'prop-types';
 
 const styles = StyleSheet.create({
@@ -51,6 +60,54 @@ const styles = StyleSheet.create({
 
 const DealListItemDetail = ({ initialDealData, onBack }) => {
     const [deal, setDeal] = useState(initialDealData);
+    const [imageIndex, setImageIndex] = useState(0);
+
+    const width = Dimensions.get('window').width;
+
+    const imageXPosition = new Animated.Value(0);
+
+    const handleSwipe = (indexDirection) => {
+        // 1. update the state and change the image index
+        /* 2. animate the same view that is holding image that 
+        we swipe completely to the left and animate to the right */
+
+        // Swipe left case
+        if (!deal.media[imageIndex + indexDirection]) {
+            Animated.spring(imageXPosition, {
+                toValue: 0,
+                useNativeDriver: false,
+            }).start();
+            return;
+        }
+        setImageIndex((imageIndex) => imageIndex + indexDirection);
+    };
+
+    let indexDirection = 1;
+
+    const imagePanResponder = PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        onPanResponderMove: (evt, gs) => {
+            imageXPosition.setValue(gs.dx);
+        },
+        onPanResponderRelease: (evt, gs) => {
+            if (Math.abs(gs.dx) > width * 0.4) {
+                const direction = Math.sign(gs.dx);
+                indexDirection = -1 * direction;
+
+                // -1 for left, 1 for right
+                Animated.timing(imageXPosition, {
+                    toValue: direction * width,
+                    duration: 250,
+                    useNativeDriver: false,
+                }).start(() => handleSwipe(-1 * direction));
+            } else {
+                Animated.spring(imageXPosition, {
+                    toValue: 0,
+                    useNativeDriver: false,
+                }).start();
+            }
+        },
+    });
 
     useEffect(async () => {
         const ac = new AbortController();
@@ -69,12 +126,24 @@ const DealListItemDetail = ({ initialDealData, onBack }) => {
         return () => ac.abort();
     }, []);
 
+    useEffect(() => {
+        imageXPosition.setValue(indexDirection * width);
+        Animated.spring(imageXPosition, {
+            toValue: 0,
+            useNativeDriver: false,
+        }).start();
+    }, [imageIndex]);
+
     return (
         <View style={styles.container}>
             <TouchableOpacity onPress={onBack}>
                 <Text style={styles.backLink}>Back</Text>
             </TouchableOpacity>
-            <Image source={{ uri: deal.media[0] }} style={styles.image} />
+            <Animated.Image
+                {...imagePanResponder.panHandlers}
+                source={{ uri: deal.media[imageIndex] }}
+                style={[{ left: imageXPosition }, styles.image]}
+            />
             <View>
                 <View style={styles.info}>
                     <Text style={styles.title}>{deal.title}</Text>
@@ -85,7 +154,10 @@ const DealListItemDetail = ({ initialDealData, onBack }) => {
                 </View>
                 <View style={styles.detail}>
                     <View>
-                        <Image source={{ uri: deal.user?.avatar }} style={styles.avatar} />
+                        <Image
+                            source={{ uri: deal.user?.avatar }}
+                            style={styles.avatar}
+                        />
                         <Text>{deal.user?.name}</Text>
                     </View>
                     <View>
