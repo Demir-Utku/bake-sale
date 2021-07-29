@@ -25,7 +25,7 @@ module.exports = {
         'react-native/split-platform-components': ['warn'],
         'react-native/no-inline-styles': ['warn'],
         'react-native/no-color-literals': ['off'],
-        'max-len': ['error', { code: 120, tabWidth: 4 }],
+        'max-len': ['error', { code: 80, tabWidth: 4 }],
         'object-curly-newline': ['off', 'never'],
     },
     settings: {
