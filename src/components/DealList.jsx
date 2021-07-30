@@ -9,23 +9,12 @@ const styles = StyleSheet.create({
         backgroundColor: '#eee',
         width: '100%',
     },
+    content: {
+        paddingBottom: Platform.OS === 'android' ? 100 : 120,
+    },
 });
 
 const DealList = ({ deals, onItemPress }) => {
-    const contentPaddingBottom = () => {
-        if (Platform.OS === 'android' && deals.length >= 3) {
-            return {
-                paddingBottom: 100,
-            };
-        } else if (Platform.OS === 'ios' && deals.length >= 4) {
-            return {
-                paddingBottom: 120,
-            };
-        } else {
-            return null;
-        }
-    };
-
     return (
         <View style={styles.list}>
             <FlatList
@@ -33,7 +22,7 @@ const DealList = ({ deals, onItemPress }) => {
                 renderItem={({ item }) => (
                     <DealListItem deal={item} onPress={onItemPress} />
                 )}
-                contentContainerStyle={contentPaddingBottom}
+                contentContainerStyle={styles.content}
             />
         </View>
     );
