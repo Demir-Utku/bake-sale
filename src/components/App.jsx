@@ -8,6 +8,7 @@ import {
     Animated,
     Easing,
     Dimensions,
+    Platform,
 } from 'react-native';
 
 import DealList from './DealList';
@@ -20,7 +21,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     main: {
-        marginTop: 20,
+        marginTop: Platform.OS === 'ios' ? 50 : 10,
     },
     header: {
         fontSize: 40,
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export const App = () => {
+const App = () => {
     const [deals, setDeals] = useState([]);
     const [dealsFromSearch, setDealsFromSearch] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');

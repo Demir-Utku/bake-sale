@@ -77,7 +77,6 @@ const DealListItemDetail = ({ initialDealData, onBack }) => {
                 toValue: 0,
                 useNativeDriver: false,
             }).start();
-            return;
         }
         setImageIndex((imageIndex) => imageIndex + indexDirection);
     };
@@ -96,8 +95,9 @@ const DealListItemDetail = ({ initialDealData, onBack }) => {
 
                 // -1 for left, 1 for right
                 Animated.timing(imageXPosition, {
+                    delay: 0,
                     toValue: direction * width,
-                    duration: 250,
+                    duration: 150,
                     useNativeDriver: false,
                 }).start(() => handleSwipe(-1 * direction));
             } else {
@@ -135,7 +135,7 @@ const DealListItemDetail = ({ initialDealData, onBack }) => {
     }, [imageIndex]);
 
     return (
-        <View style={styles.container}>
+        <View>
             <TouchableOpacity onPress={onBack}>
                 <Text style={styles.backLink}>Back</Text>
             </TouchableOpacity>
