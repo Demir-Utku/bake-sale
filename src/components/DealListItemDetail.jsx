@@ -1,6 +1,8 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-undef */
 import React, { useState, useEffect } from 'react';
 import {
+    ScrollView,
     View,
     Text,
     Image,
@@ -77,6 +79,7 @@ const DealListItemDetail = ({ initialDealData, onBack }) => {
                 toValue: 0,
                 useNativeDriver: false,
             }).start();
+            return;
         }
         setImageIndex((imageIndex) => imageIndex + indexDirection);
     };
@@ -135,7 +138,7 @@ const DealListItemDetail = ({ initialDealData, onBack }) => {
     }, [imageIndex]);
 
     return (
-        <View>
+        <ScrollView>
             <TouchableOpacity onPress={onBack}>
                 <Text style={styles.backLink}>Back</Text>
             </TouchableOpacity>
@@ -165,7 +168,7 @@ const DealListItemDetail = ({ initialDealData, onBack }) => {
                     </View>
                 </View>
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
